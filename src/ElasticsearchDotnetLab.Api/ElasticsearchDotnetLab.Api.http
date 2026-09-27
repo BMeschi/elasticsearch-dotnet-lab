@@ -1,0 +1,45 @@
+@HostAddress = http://localhost:5000
+
+### 1. Health Check
+GET {{HostAddress}}/api/health
+Accept: application/json
+
+### 2. Seed Database (Recreate Index & Ingest 40 Products)
+POST {{HostAddress}}/api/admin/seed
+Accept: application/json
+
+### 3. Relevance Search: "dell notebook" (Boosted name & brand over description)
+GET {{HostAddress}}/api/products/search?q=dell%20notebook
+Accept: application/json
+
+### 4. Accent-Insensitive Search: "cafeteira eletrica" (Matches "Cafeteira Elétrica Oster")
+GET {{HostAddress}}/api/products/search?q=cafeteira%20eletrica
+Accept: application/json
+
+### 5. Typo-Tolerant Search (Fuzzy): "del notebok"
+GET {{HostAddress}}/api/products/search?q=del%20notebok&fuzzy=true
+Accept: application/json
+
+### 6. Exact Phrase Match: "smart tv"
+GET {{HostAddress}}/api/products/search?q=smart%20tv&phrase=true
+Accept: application/json
+
+### 7. Filtered Search (Computers category between $3,000 and $8,000)
+GET {{HostAddress}}/api/products/search?category=Computers&minPrice=3000&maxPrice=8000
+Accept: application/json
+
+### 8. Get Product by ID
+GET {{HostAddress}}/api/products/1
+Accept: application/json
+
+### 9. Faceted Aggregations (Categories, Brands, Price Stats)
+GET {{HostAddress}}/api/products/aggregations
+Accept: application/json
+
+### 10. Diagnostics: Analyze with Custom products_analyzer (Asciifolding active)
+GET {{HostAddress}}/api/search/analyze?text=Cafeteira%20El%C3%A9trica&analyzer=products_analyzer
+Accept: application/json
+
+### 11. Diagnostics: Analyze with standard analyzer (Accents preserved)
+GET {{HostAddress}}/api/search/analyze?text=Cafeteira%20El%C3%A9trica&analyzer=standard
+Accept: application/json
